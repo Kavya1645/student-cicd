@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Student Management System</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 30px auto; padding: 0 15px; }
+    h1 { color: #2c3e50; }
+    form.add { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+    input { padding: 8px; flex: 1; min-width: 140px; }
+    button { padding: 8px 14px; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #2c3e50; color: #fff; }
+    .inline { display: inline; }
+  </style>
+</head>
+<body>
+  <h1>Student Management System</h1>
+  <h3>{{ 'Edit Student' if edit else 'Add Student' }}</h3>
+  <form class="add" method="post" action="{{ url_for('edit', sid=edit['id']) if edit else url_for('add') }}">
+    <input name="name" placeholder="Name" value="{{ edit['name'] if edit else '' }}" required>
+    <input name="email" type="email" placeholder="Email" value="{{ edit['email'] if edit else '' }}" required>
+    <input name="course" placeholder="Course" value="{{ edit['course'] if edit else '' }}" required>
+    <button type="submit">{{ 'Update' if edit else 'Add' }}</button>
+  </form>
+  <table>
+    <tr><th>ID</th><th>Name</th><th>Email</th><th>Course</th><th>Actions</th></tr>
+    {% for s in students %}
+    <tr>
+      <td>{{ s['id'] }}</td><td>{{ s['name'] }}</td><td>{{ s['email'] }}</td><td>{{ s['course'] }}</td>
+      <td>
+        <a href="{{ url_for('edit', sid=s['id']) }}">Edit</a>
+        <form class="inline" method="post" action="{{ url_for('delete', sid=s['id']) }}">
+          <button type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">No students yet.</td></tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
